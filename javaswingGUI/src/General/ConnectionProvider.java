@@ -12,14 +12,27 @@ import java.util.logging.Logger;
  */
 public class ConnectionProvider {
     
-    public static Connection connect(){
-        Connection con;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_document_tracker","root","");
-            return con;
-        } catch (Exception ex) {
-            return null;
-        }
+       private String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+       private String dbConnectionURL = "jdbc:mysql://localhost:3306/student_document_tracker";
+       private String dbUsername = "admin";
+       private String dbPassword = "p@ssword!";
+        
+    
+    public String getJdbcDriver() {
+        return jdbcDriver;
     }
+
+    public String getDbConnectionURL() {
+        return dbConnectionURL;
+    }
+
+    public String getDbUsername() {
+        return dbUsername;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
+    }
+   
+    
 }

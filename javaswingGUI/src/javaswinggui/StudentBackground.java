@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 
@@ -22,11 +23,29 @@ import javax.swing.JOptionPane;
 public class StudentBackground extends javax.swing.JFrame {
       Connection con;
       PreparedStatement ps;
+      private  String studentID;
+      private String studentName;
+      
+     
       
     
     public StudentBackground() {
        
         initComponents();
+        
+        //sample sir cupal
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 
     /**
@@ -64,6 +83,8 @@ public class StudentBackground extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        searchTF = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -209,6 +230,15 @@ public class StudentBackground extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 240, 130, -1));
+        jPanel1.add(searchTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 380, 320, -1));
+
+        searchButton.setText("SEARCH");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(searchButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 380, 140, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 980, 730));
 
@@ -242,7 +272,7 @@ private JFrame frame;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
          // TODO add your handling code here:
-        this.con = ConnectionProvider.connect();
+       // this.con = thisConnectionProvider.connect();
         int student_id = Integer.parseInt(this.student_id.getText());
         System.out.println(student_id);
         String student_name = this.student_name.getText();
@@ -285,6 +315,162 @@ private JFrame frame;
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        // TODO add your handling code here:
+        
+
+        
+        
+         try{
+             
+            // this sql query will pull out all database records
+              String searchQuery = " SELECT * FROM student_background "
+                      + "WHERE student_id LIKE ? OR " 
+                      + "student_name LIKE ?"; 
+
+               //create object for the DatabaseConnection
+             ConnectionProvider dbc = new ConnectionProvider();
+
+              //Declare variables to capture database credentials
+              String jdbcDriver = dbc.getJdbcDriver();
+              String dbConnectionURL = dbc.getDbConnectionURL();
+              String dbUsername = dbc.getDbUsername();
+              String dbPassword = dbc.getDbPassword();
+
+              Class.forName(jdbcDriver);
+              Connection connection = DriverManager.getConnection(dbConnectionURL,
+                      dbUsername,dbPassword);
+
+              PreparedStatement statement = connection.prepareStatement(searchQuery);
+            
+             // Set search parameters (you can customize this part)
+             String searchKeyword = searchTF.getText(); // Replace with your search keyword
+             statement.setString(1, "%" + searchKeyword + "%"); 
+             statement.setString(2, "%" + searchKeyword + "%");
+       
+           
+              ResultSet resultSet = statement.executeQuery();
+           // Check if a row was found
+           
+            if (resultSet.next()) {
+                this.studentID = resultSet.getString("student_id");
+                 this.studentName = resultSet.getString("student_name");
+                
+                
+ 
+
+                // Display the retrieved data
+                System.out.println("First Name: " + this.studentID);
+                System.out.println("Last Name: " + this.studentName);
+                
+                
+                 //display the output in the UI
+//                  recordNumJL.setText(this.record_id);
+//                  firstNameTF.setText(this.firstName);
+//                  lastNameTF.setText(this.lastName);
+//                  school_numTF.setText(this.school_id);
+//                  
+//                  
+                  
+                      //display related data search to the table
+                    // String searchQuery2 = "SELECT * FROM users WHERE";
+                    // Create a table model to store data
+                    DefaultTableModel tableModel = new DefaultTableModel();
+                    jTable2.setModel(tableModel);
+                    
+                    /*this part is the application of centering the data in the cell, coming from the custom class inside
+                    *the tablerelated package, inside CenteredTableCellRenderer class
+                    **/
+//                    tablerelated.CenteredTableCellRenderer renderer = new tablerelated.CenteredTableCellRenderer();
+//                    jTable2.setDefaultRenderer(Object.class, renderer);
+                    
+
+                  
+                    // Create a PreparedStatement
+                    PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
+                    preparedStatement.setString(1, "%" + searchKeyword + "%");
+                    preparedStatement.setString(2, "%" + searchKeyword + "%");
+                
+
+                    // Execute the query
+                    ResultSet resultSet2 = preparedStatement.executeQuery();
+
+                    // Get column names and add them to the table model
+                    java.sql.ResultSetMetaData metaData = resultSet2.getMetaData();
+                    
+                    int columnCount = metaData.getColumnCount();
+                    for (int i = 1; i <= columnCount; i++) {
+                        
+                            //tableModel.addColumn(metaData.getColumnName(i));
+              
+                            String columnName = metaData.getColumnName(i);
+                            if (columnName.equals("student_id") || columnName.equals("student_name")) {
+                                 
+                                     tableModel.addColumn(columnName);
+
+                            }
+                        
+                    }
+
+                    // Add rows to the table model
+                    while (resultSet2.next()) {
+                        Object[] rowData = new Object[columnCount];
+                        for (int i = 1; i <= columnCount; i++) {
+                            //rowData[i - 1] = resultSet2.getObject(i);
+                            
+                            rowData[0] = resultSet2.getObject("student_id");
+                            rowData[1] = resultSet2.getObject("student_name");
+                            
+                            
+                            
+                            
+                            
+                        }
+                        tableModel.addRow(rowData);
+                    }
+                    
+         
+                  
+            } else {
+                System.out.println("No matching records found.");
+                JOptionPane.showMessageDialog(null, "No record found!");
+            }
+              
+               
+            connection.close();
+            resultSet.close();
+            statement.close();
+            
+        }  catch (ClassNotFoundException | SQLException e  ) {
+            
+            e.printStackTrace();
+            
+        
+        
+       
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_searchButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -344,6 +530,8 @@ private JFrame frame;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTF;
     private javax.swing.JTextField section;
     private javax.swing.JTextField status;
     private javax.swing.JTextField student_id;

@@ -132,7 +132,6 @@ public class StudentResouces extends javax.swing.JFrame {
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\jetro\\Downloads\\tcc900.png")); // NOI18N
         jLabel4.setText(".");
         jLabel4.setMaximumSize(new java.awt.Dimension(500, 200));
         jLabel4.setMinimumSize(new java.awt.Dimension(500, 200));

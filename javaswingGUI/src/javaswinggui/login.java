@@ -59,8 +59,6 @@ public class login extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe Script", 1, 12)); // NOI18N
         jLabel4.setText("STUDENT DOCUMENT DEFECIENCY TRACKER");
         Right.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(159, 327, 316, -1));
-
-        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\jetro\\Downloads\\keep.jpg")); // NOI18N
         Right.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(185, 153, -1, 156));
 
         jPanel1.add(Right);
@@ -114,7 +112,7 @@ public class login extends javax.swing.JFrame {
         Left.add(Login, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 100, 33));
 
         jPanel1.add(Left);
-        Left.setBounds(400, 0, 410, 500);
+        Left.setBounds(400, 0, 410, 353);
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 794, -1));
 
@@ -138,6 +136,9 @@ public class login extends javax.swing.JFrame {
     // Assuming tfusername and tfpassword are JTextField components
        String username = tfusername.getText();
        String password = tfpassword.getText();
+       
+       
+       
     
     if (username.equals("admin") && password.equals("123")) {
         HomePage home = new HomePage();
